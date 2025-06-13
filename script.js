@@ -6,6 +6,22 @@ const uploadForm = document.getElementById("uploadForm");
 const photoInput = document.getElementById("photoInput");
 const captionInput = document.getElementById("captionInput");
 const previewImage = document.getElementById("previewImage");
+// Emot love terbang
+function createLove() {
+  const img = document.createElement("img");
+  img.src = "images/love.png"; // love
+  img.className = "love";
+  img.style.left = Math.random() * window.innerWidth + "px";
+  img.style.animationDuration = 2 + Math.random() * 3 + "s";
+  img.style.transform = `rotate(${Math.random() * 360}deg) scale(${
+    0.6 + Math.random() * 0.8
+  })`;
+  document.body.appendChild(img);
+  setTimeout(() => img.remove(), 5000);
+}
+
+// Loop terus-menerus
+setInterval(createLove, 400);
 
 // Ambil dan simpan data lokal
 function getData() {
@@ -182,10 +198,10 @@ selectModeBtn.addEventListener("click", () => {
 function toggleSelect(div, index) {
   if (selectedIndexes.has(index)) {
     selectedIndexes.delete(index);
-    div.classList.remove("ring", "ring-pink-500", "scale-95", "brightness-75");
+    div.classList.remove("ring", "ring-pink-300", "scale-95", "brightness-75");
   } else {
     selectedIndexes.add(index);
-    div.classList.add("ring", "ring-pink-500", "scale-95", "brightness-75");
+    div.classList.add("ring", "ring-pink-300", "scale-95", "brightness-75");
 
     if (!selectionInfo.classList.contains("hidden")) {
       selectionInfo.classList.add("hidden");
