@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/x-icon" href="images/icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-6 overflow-x-hidden relative bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://i.pinimg.com/736x/ad/c5/c1/adc5c11ae0782ecbd2e26f2492d45c72.jpg');">
+
+ <!-- Tombol Musik -->
+  <button id="musicBtn" class="fixed bottom-5 left-5 z-50 bg-white rounded-full p-3 shadow-lg hover:scale-110 transition">
+    <img src="images/music.png" class="w-6 h-6" alt="Music" />
+  </button>
+
+ <!-- Popup Lagu -->
+<div id="musicPopup" class="fixed bottom-20 left-5 z-40 bg-white rounded-xl p-4 w-72 shadow-xl opacity-0 translate-y-5 pointer-events-none transition-all duration-300">
+  <div class="flex justify-between items-center mb-2">
+    <h3 class="text-pink-600 font-semibold">Pilih Lagu</h3>
+    <button id="closePopup" class="text-gray-400 hover:text-red-500 text-xl font-bold">&times;</button>
+  </div>
+
+    <!-- Daftar Lagu -->
+    <ul id="songList" class="space-y-2 max-h-40 overflow-y-auto text-sm pr-2"></ul>
+
+    <!-- Music Player Bar -->
+    <div id="musicBar" class="mt-4 border-t pt-4 flex flex-col gap-3">
+      <div class="flex items-center gap-3">
+        <button id="playPauseBtn">
+          <img id="playIcon" src="images/pause.png" class="w-6 h-6" alt="Play/Pause" />
+        </button>
+        <span id="currentSong" class="font-medium text-gray-700 text-sm truncate"></span>
+      </div>
+      <input type="range" id="progressBar" value="0" class="w-full h-1 bg-gray-200 rounded" />
+    </div>
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="audio" preload="auto"></audio>
+  <!-- Overlay untuk klik luar popup -->
+<div id="overlay" class="fixed inset-0 z-30 hidden"></div>
+
+
+  <!-- Judul -->
+  <h1 class="text-2xl md:text-3xl font-bold text-pink-700 mb-4 bg-white/70 px-4 py-2 rounded-xl backdrop-blur text-center w-full max-w-lg">
+    Gallery
+  </h1>
+
+  <!-- Galeri -->
+<div id="gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-5xl px-2 sm:px-4 mb-24 transition-all duration-300"></div>
+
+  <!-- Tombol Tambah -->
+  <button id="addButton" class="fixed bottom-5 right-5 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition duration-300 z-40">
+    <img src="images/plus.png" class="w-6 h-6" alt="Tambah" />
+  </button>
+
+<!-- Modal Upload -->
+<div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-xl p-6 w-11/12 max-w-sm relative animate-fadeIn shadow-xl">
+    <button id="closeModal" class="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+    
+    <h2 class="text-lg font-semibold text-gray-800 mb-4 text-center">Tambah Kenangan</h2>
+    
+    <form id="uploadForm" class="space-y-3">
+      <!-- FOOTER / HEADER DALAM MODAL -->
+      <div class="bg-pink-100 text-pink-800 text-center text-sm font-medium px-3 py-2 rounded w-full">
+        Pilih foto terbaikmu ya! 💖
+      </div>
+
+      <!-- PREVIEW IMAGE -->
+      <img id="previewImage" src="" alt="Preview" class="w-full h-48 object-cover rounded hidden border" />
+      
+      <!-- PILIH FILE -->
+      <input type="file" id="photoInput" required class="w-full border p-2 rounded text-sm" />
+      
+      <!-- CAPTION -->
+      <input type="text" id="captionInput" placeholder="Tulis kenangan..." required class="w-full border p-2 rounded text-sm" />
+      
+      <!-- SIMPAN -->
+      <button type="submit" class="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700 transition text-sm">Simpan</button>
+    </form>
+  </div>
+</div>
+  <script src="script.js"></script>
+</body>
+</html>
