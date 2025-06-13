@@ -57,6 +57,24 @@
     <img src="images/plus.png" class="w-6 h-6" alt="Tambah" />
   </button>
 
+<!-- Tombol Select -->
+  <button id="selectModeBtn" class="fixed bottom-20 right-5 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:scale-110 transition duration-300 z-40">
+    <img src="images/select.png" alt="Pilih" class="w-6 h-6" />
+  </button>
+
+  <!-- Tombol Hapus -->
+  <button id="deleteSelectedBtn" class="fixed bottom-36 right-5 bg-red-500 text-white p-3 rounded-full shadow-lg hover:scale-110 transition duration-300 z-40 hidden">
+    <img src="images/delete.png" alt="Hapus" class="w-6 h-6" />
+  </button>
+
+  <!-- Info Pilih -->
+<div id="selectionInfo" class="fixed bottom-36 right-[4.5rem] bg-white text-gray-800 px-4 py-2 rounded shadow z-40 hidden">
+  Klik foto untuk memilih yang ingin dihapus
+</div>
+
+
+
+
 <!-- Modal Upload -->
 <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-xl p-6 w-11/12 max-w-sm relative animate-fadeIn shadow-xl">
@@ -84,6 +102,17 @@
     </form>
   </div>
 </div>
+
+<!-- MODAL KONFIRMASI HAPUS -->
+  <div id="confirmDeleteModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-xl shadow-lg w-80 text-center animate-fadeIn">
+      <h2 class="text-lg font-semibold mb-4 text-pink-600">Yakin ingin menghapus foto terpilih?</h2>
+      <div class="flex justify-center gap-4 mt-4">
+        <button id="cancelDeleteBtn" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition">Batal</button>
+        <button id="confirmDeleteBtn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Hapus</button>
+      </div>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
