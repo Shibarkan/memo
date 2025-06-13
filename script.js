@@ -5,18 +5,17 @@ const closeModal = document.getElementById("closeModal");
 const uploadForm = document.getElementById("uploadForm");
 const photoInput = document.getElementById("photoInput");
 const captionInput = document.getElementById("captionInput");
+const previewImage = document.getElementById("previewImage");
 
-// Ambil data dari localStorage
+// Ambil dan simpan data lokal
 function getData() {
   return JSON.parse(localStorage.getItem("photos") || "[]");
 }
-
-// Simpan data ke localStorage
 function saveData(data) {
   localStorage.setItem("photos", JSON.stringify(data));
 }
 
-// Buat transformasi acak
+// Acak gaya
 function randomTransform() {
   const rotations = [-8, -4, 0, 4, 8];
   const yOffset = [-1, 0, 1];
@@ -25,7 +24,7 @@ function randomTransform() {
   }deg) translateY(${yOffset[Math.floor(Math.random() * yOffset.length)]}rem)`;
 }
 
-// Render galeri dengan animasi delay
+// Tampilkan galeri
 function renderGallery() {
   gallery.innerHTML = "";
   const data = getData();
@@ -34,7 +33,7 @@ function renderGallery() {
     setTimeout(() => {
       const div = document.createElement("div");
       div.className =
-        "relative bg-white rounded shadow-md p-2 transition duration-700 transform opacity-0 translate-y-10";
+        "photo-item relative bg-white rounded shadow-md p-2 transform opacity-0 translate-y-10";
       div.style.transform += " " + randomTransform();
 
       const img = document.createElement("img");
@@ -50,53 +49,36 @@ function renderGallery() {
       time.className = "text-xs text-right text-gray-400";
       time.textContent = new Date(item.date).toLocaleString();
 
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "Hapus";
-      deleteBtn.className =
-        "absolute top-1 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600";
-      deleteBtn.onclick = () => {
-        const newData = getData().filter((_, i) => i !== index);
-        saveData(newData);
-        renderGallery();
-      };
-
       div.appendChild(img);
       div.appendChild(caption);
       div.appendChild(time);
-      div.appendChild(deleteBtn);
       gallery.appendChild(div);
 
-      // Trigger animasi satu per satu
       setTimeout(() => {
         div.classList.remove("opacity-0", "translate-y-10");
         div.classList.add("opacity-100", "translate-y-0");
       }, 50);
-    }, index * 200); // Delay tiap item
+    }, index * 200);
   });
 }
 
-// Buka modal upload
+// Modal Upload
 addButton.onclick = () => {
+  if (isSelectMode) return; // Jangan buka modal jika sedang pilih
   uploadModal.classList.remove("hidden");
 };
 
-// Tutup modal
-closeModal.onclick = () => {
-  uploadModal.classList.add("hidden");
-};
+closeModal.onclick = () => uploadModal.classList.add("hidden");
 
-// Submit upload
 uploadForm.onsubmit = (e) => {
   e.preventDefault();
   const file = photoInput.files[0];
   const reader = new FileReader();
   reader.onload = function () {
-    const fakePath = `pretties/${file.name}`; // Simulasi folder pretties
     const newItem = {
       url: reader.result,
       caption: captionInput.value,
       date: new Date().toISOString(),
-      path: fakePath,
     };
     const current = getData();
     current.push(newItem);
@@ -104,32 +86,15 @@ uploadForm.onsubmit = (e) => {
     renderGallery();
     uploadModal.classList.add("hidden");
     uploadForm.reset();
+    previewImage.classList.add("hidden");
+    previewImage.src = "";
   };
   if (file) {
     reader.readAsDataURL(file);
   }
 };
-//music
 
-// Emot love terbang
-function createLove() {
-  const img = document.createElement("img");
-  img.src = "images/love.png"; // love
-  img.className = "love";
-  img.style.left = Math.random() * window.innerWidth + "px";
-  img.style.animationDuration = 2 + Math.random() * 3 + "s";
-  img.style.transform = `rotate(${Math.random() * 360}deg) scale(${
-    0.6 + Math.random() * 0.8
-  })`;
-  document.body.appendChild(img);
-  setTimeout(() => img.remove(), 5000);
-}
-
-// Loop terus-menerus
-setInterval(createLove, 400);
-const previewImage = document.getElementById("previewImage");
-
-// Preview saat pilih gambar
+// Preview Gambar
 photoInput.onchange = () => {
   const file = photoInput.files[0];
   if (file) {
@@ -145,8 +110,119 @@ photoInput.onchange = () => {
   }
 };
 
-// Render awal
+// Inisialisasi galeri awal
 renderGallery();
+
+// edit hapus
+const selectModeBtn = document.getElementById("selectModeBtn");
+const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
+const selectionInfo = document.getElementById("selectionInfo");
+const confirmDeleteModal = document.getElementById("confirmDeleteModal");
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
+let isSelectMode = false;
+let selectedIndexes = new Set();
+
+// Toggle Mode Pilih
+selectModeBtn.addEventListener("click", () => {
+  isSelectMode = !isSelectMode;
+  selectedIndexes.clear();
+  // disable
+  addButton.disabled = isSelectMode;
+  if (isSelectMode) {
+    addButton.classList.add(
+      "opacity-50",
+      "cursor-not-allowed",
+      "pointer-events-none"
+    );
+  } else {
+    addButton.classList.remove(
+      "opacity-50",
+      "cursor-not-allowed",
+      "pointer-events-none"
+    );
+  }
+
+  document.querySelectorAll(".photo-item").forEach((div, index) => {
+    div.classList.remove(
+      "ring",
+      "ring-pink-500",
+      "scale-95",
+      "brightness-75",
+      "wiggle"
+    );
+
+    if (isSelectMode) {
+      div.classList.add("wiggle"); // tambahkan goyang
+      div.addEventListener(
+        "click",
+        (div._selectHandler = () => toggleSelect(div, index))
+      );
+    } else {
+      div.removeEventListener("click", div._selectHandler);
+    }
+  });
+
+  deleteSelectedBtn.classList.toggle("hidden", !isSelectMode);
+  if (isSelectMode) {
+    selectionInfo.classList.remove("hidden");
+    selectionInfo.classList.remove("slide-in-boing"); // reset animasi
+    void selectionInfo.offsetWidth; // trigger reflow agar animasi bisa diulang
+    selectionInfo.classList.add("slide-in-boing");
+  } else {
+    selectionInfo.classList.add("hidden");
+  }
+
+  const icon = selectModeBtn.querySelector("img");
+  icon.src = isSelectMode ? "images/close.png" : "images/select.png";
+});
+
+// Fungsi Pilih
+function toggleSelect(div, index) {
+  if (selectedIndexes.has(index)) {
+    selectedIndexes.delete(index);
+    div.classList.remove("ring", "ring-pink-500", "scale-95", "brightness-75");
+  } else {
+    selectedIndexes.add(index);
+    div.classList.add("ring", "ring-pink-500", "scale-95", "brightness-75");
+
+    if (!selectionInfo.classList.contains("hidden")) {
+      selectionInfo.classList.add("hidden");
+    }
+  }
+
+  if (selectedIndexes.size === 0 && isSelectMode) {
+    selectionInfo.classList.remove("hidden");
+  }
+}
+
+// Tampilkan Modal Konfirmasi saat Klik Hapus
+deleteSelectedBtn.addEventListener("click", () => {
+  if (selectedIndexes.size > 0) {
+    confirmDeleteModal.classList.remove("hidden");
+  }
+});
+
+// Konfirmasi Hapus
+confirmDeleteBtn.addEventListener("click", () => {
+  const data = getData().filter((_, i) => !selectedIndexes.has(i));
+  saveData(data);
+  isSelectMode = false;
+  selectedIndexes.clear();
+  renderGallery();
+  confirmDeleteModal.classList.add("hidden");
+  deleteSelectedBtn.classList.add("hidden");
+  selectionInfo.classList.add("hidden");
+
+  const icon = selectModeBtn.querySelector("img");
+  icon.src = "images/select.png";
+});
+
+// Batal Hapus
+cancelDeleteBtn.addEventListener("click", () => {
+  confirmDeleteModal.classList.add("hidden");
+});
 
 //music
 const musicBtn = document.getElementById("musicBtn");
