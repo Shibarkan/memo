@@ -1,29 +1,64 @@
-    .love {
-      position: fixed;
-      top: 100%;
-      width: 24px;
-      height: 24px;
-      z-index: 40;
-      animation: floatUp ease-in infinite;
-      pointer-events: none;
-    }
+.love {
+  position: fixed;
+  top: 100%;
+  width: 24px;
+  height: 24px;
+  z-index: 40;
+  animation: floatUp ease-in infinite;
+  pointer-events: none;
+}
 
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-120vh) scale(1.5);
-        opacity: 0;
-      }
-    }
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-120vh) scale(1.5);
+    opacity: 0;
+  }
+}
 
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
-    }
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
-    .animate-fadeIn {
-      animation: fadeIn 0.3s ease-out;
-    }
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+}
+.wiggle {
+  animation: wiggle 0.3s ease-in-out infinite;
+}
+@keyframes slideInLeftBoing {
+  0% {
+    transform: translateX(100%) scale(0.95);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10%) scale(1.03);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+.slide-in-boing {
+  animation: slideInLeftBoing 0.45s ease-out forwards;
+}
