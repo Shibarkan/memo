@@ -175,6 +175,7 @@ const songTitles = [
   "nouvelle_vague",
   "so_real",
   "season",
+  "wildflowers",
 ];
 
 const songs = songTitles.map((title) => ({
