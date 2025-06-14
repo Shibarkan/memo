@@ -52,24 +52,50 @@ function renderGallery() {
         "photo-item relative bg-white rounded shadow-md p-2 transform opacity-0 translate-y-10";
       div.style.transform += " " + randomTransform();
 
+      // Gambar
       const img = document.createElement("img");
       img.src = item.url;
       img.alt = "kenangan";
       img.className = "w-full h-60 object-cover rounded";
 
+      // Caption
       const caption = document.createElement("p");
-      caption.className = "text-sm mt-2 text-gray-600";
+      caption.className = "text-sm text-gray-600";
       caption.textContent = item.caption;
 
+      // Tombol Edit
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "✏️ Edit";
+      editBtn.className = "text-xs text-blue-500 hover:underline ml-2";
+      editBtn.onclick = () => {
+        const newCaption = prompt("Edit keterangan:", item.caption);
+        if (newCaption !== null) {
+          item.caption = newCaption;
+          const current = getData();
+          current[index].caption = newCaption;
+          saveData(current);
+          renderGallery();
+        }
+      };
+
+      // Bungkus caption dan tombol edit
+      const captionWrapper = document.createElement("div");
+      captionWrapper.className = "flex items-center justify-between mt-2";
+      captionWrapper.appendChild(caption);
+      captionWrapper.appendChild(editBtn);
+
+      // Tanggal/waktu
       const time = document.createElement("p");
       time.className = "text-xs text-right text-gray-400";
       time.textContent = new Date(item.date).toLocaleString();
 
+      // Susun elemen
       div.appendChild(img);
-      div.appendChild(caption);
+      div.appendChild(captionWrapper);
       div.appendChild(time);
       gallery.appendChild(div);
 
+      // Animasi fade-in
       setTimeout(() => {
         div.classList.remove("opacity-0", "translate-y-10");
         div.classList.add("opacity-100", "translate-y-0");
@@ -77,6 +103,7 @@ function renderGallery() {
     }, index * 200);
   });
 }
+
 
 // Modal Upload
 addButton.onclick = () => {
@@ -227,6 +254,8 @@ confirmDeleteBtn.addEventListener("click", () => {
   isSelectMode = false;
   selectedIndexes.clear();
   renderGallery();
+  addButton.disabled = false;
+  addButton.classList.remove("opacity-50", "cursor-not-allowed", "pointer-events-none");
   confirmDeleteModal.classList.add("hidden");
   deleteSelectedBtn.classList.add("hidden");
   selectionInfo.classList.add("hidden");
